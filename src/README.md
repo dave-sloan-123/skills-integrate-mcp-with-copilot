@@ -12,13 +12,13 @@ A super simple FastAPI application that allows students to view and sign up for 
 1. Install the dependencies:
 
    ```
-   pip install fastapi uvicorn
+   pip install -r ../requirements.txt
    ```
 
 2. Run the application:
 
    ```
-   python app.py
+   uvicorn app:app --reload
    ```
 
 3. Open your browser and go to:
@@ -31,6 +31,7 @@ A super simple FastAPI application that allows students to view and sign up for 
 | ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
 | GET    | `/activities`                                                     | Get all activities with their details and current participant count |
 | POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
+| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | Unregister from an activity                                         |
 
 ## Data Model
 
@@ -47,4 +48,20 @@ The application uses a simple data model with meaningful identifiers:
    - Name
    - Grade level
 
-All data is stored in memory, which means data will be reset when the server restarts.
+## Database and Seed Data
+
+The application now uses SQLite for persistent storage. The database file is created automatically at:
+
+- `src/data/school.db`
+
+On startup, the app creates the required tables (`activities`, `users`, `enrollments`) if they do not exist. It also seeds the initial activity and enrollment data only when the `activities` table is empty.
+
+### Resetting the Database
+
+To re-run with a clean seed, stop the app and delete the database file:
+
+```
+rm -f data/school.db
+```
+
+Then start the app again. The seed data will be recreated automatically.
